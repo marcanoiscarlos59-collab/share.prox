@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rucoy Share Elite - Portal Oficial</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        rucoy: {
+                            dark: '#07080c',
+                            card: '#0f111a',
+                            cardHover: '#161924',
+                            gold: '#f59e0b',
+                            goldHover: '#d97706',
+                            whatsapp: '#25D366',
+                            whatsappHover: '#20ba5a'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        cinzel: ['Cinzel', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { background-color: #07080c; color: #f3f4f6; }
+        .glow-gold { filter: drop-shadow(0 0 15px rgba(245, 158, 11, 0.3)); }
+        .glow-box { box-shadow: 0 0 30px rgba(245, 158, 11, 0.12); }
+        .glow-whatsapp { box-shadow: 0 0 25px rgba(37, 211, 102, 0.25); }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #07080c; }
+        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #374151; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-amber-500 selection:text-black">
+
+    <!-- Navigation Bar -->
+    <nav class="sticky top-0 z-50 bg-rucoy-dark/95 backdrop-blur-md border-b border-gray-800/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="showSection('home')">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-700 flex items-center justify-center shadow-lg shadow-amber-500/30">
+                    <i class="fa-solid fa-shield-halved text-black text-xl"></i>
+                </div>
+                <div>
+                    <span class="font-cinzel text-xl sm:text-2xl font-black bg-gradient-to-r from-amber-400 via-yellow-200 to-amber-500 bg-clip-text text-transparent">RUCOY SHARE</span>
+                    <span class="block text-[10px] uppercase tracking-widest text-amber-500 font-bold">Elite Services & Boosting</span>
+                </div>
+            </div>
+
+            <div class="hidden md:flex items-center space-x-6 text-sm font-medium">
+                <button onclick="showSection('home')" class="nav-link text-amber-400 transition hover:text-amber-300 py-2">Inicio</button>
+                <button onclick="showSection('services')" class="nav-link text-gray-300 transition hover:text-amber-300 py-2">Servicios & Precios</button>
+                <button onclick="showSection('dashboard')" id="nav-dashboard" class="nav-link text-gray-300 transition hover:text-amber-300 py-2 hidden">Mi Panel</button>
+                <button onclick="showSection('admin')" id="nav-admin" class="nav-link text-red-400 transition hover:text-red-300 py-2 hidden font-bold"><i class="fa-solid fa-lock mr-1"></i> Admin Nube</button>
+            </div>
+
+            <div class="flex items-center space-x-3">
+                <div id="auth-guest-controls" class="flex items-center space-x-2">
+                    <button onclick="openModal('login')" class="px-4 py-2 text-sm font-semibold text-gray-300 hover:text-white transition">Iniciar Sesión</button>
+                    <button onclick="openModal('register')" class="px-4.5 py-2.5 text-sm font-bold bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black rounded-xl shadow-lg shadow-amber-500/20 transition transform active:scale-95">Registrarse</button>
+                </div>
+                <div id="auth-user-controls" class="hidden items-center space-x-3">
+                    <div class="text-right hidden sm:block">
+                        <span id="user-display-name" class="block text-xs font-bold text-amber-400">Jugador</span>
+                        <span class="block text-[10px] text-emerald-400"><i class="fa-solid fa-circle text-[8px] animate-pulse mr-1"></i>Conectado (Nube)</span>
+                    </div>
+                    <button onclick="showSection('dashboard')" class="w-10 h-10 rounded-xl bg-gray-800 hover:bg-gray-700 border border-gray-700 flex items-center justify-center text-amber-400 transition" title="Ir al Panel">
+                        <i class="fa-solid fa-user-gear"></i>
+                    </button>
+                    <button onclick="logout()" class="w-10 h-10 rounded-xl bg-red-950/40 hover:bg-red-900/60 border border-red-900/50 flex items-center justify-center text-red-400 transition" title="Cerrar Sesión">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </button>
+                </div>
+                <!-- Mobile menu toggle -->
+                <button onclick="toggleMobileMenu()" class="md:hidden text-gray-400 hover:text-white p-2">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Dropdown Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-rucoy-card border-b border-gray-800 px-4 pt-2 pb-4 space-y-2">
+            <button onclick="showSection('home'); toggleMobileMenu()" class="block w-full text-left py-2 px-3 rounded hover:bg-gray-800 text-gray-300">Inicio</button>
+            <button onclick="showSection('services'); toggleMobileMenu()" class="block w-full text-left py-2 px-3 rounded hover:bg-gray-800 text-gray-300">Servicios & Precios</button>
+            <button onclick="showSection('dashboard'); toggleMobileMenu()" id="mobile-nav-dashboard" class="block w-full text-left py-2 px-3 rounded hover:bg-gray-800 text-gray-300 hidden">Mi Panel</button>
+            <button onclick="showSection('admin'); toggleMobileMenu()" id="mobile-nav-admin" class="block w-full text-left py-2 px-3 rounded hover:bg-red-950 text-red-400 hidden font-bold">Admin Nube</button>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow">
+
+        <!-- SECTION: HOME -->
+        <section id="section-home" class="py-12 md:py-20 px-4 max-w-7xl mx-auto">
+            <!-- Hero Banner -->
+            <div class="relative rounded-3xl overflow-hidden bg-gradient-to-r from-rucoy-card via-gray-900 to-rucoy-card border border-amber-500/25 p-8 md:p-16 glow-box">
+                <div class="absolute top-0 right-0 -mt-16 -mr-16 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute bottom-0 left-0 -mb-16 -ml-16 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                
+                <div class="relative z-10 max-w-2xl">
+                    <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/30 mb-6">
+                        <i class="fa-solid fa-crown"></i> Servicio Profesional & Share Oficial Rucoy Online
+                    </span>
+                    <h1 class="font-cinzel text-4xl sm:text-6xl font-black tracking-tight mb-6 leading-tight">
+                        LLEVA TU PERSONAJE AL <span class="bg-gradient-to-r from-amber-400 to-yellow-200 bg-clip-text text-transparent">MÁXIMO NIVEL</span>
+                    </h1>
+                    <p class="text-gray-300 text-base sm:text-lg mb-8 leading-relaxed">
+                        ¿Buscas el mejor share, farmeo de oro o subida de stats sin riesgos? Plataforma 100% verificada con registro en la nube local y botón de compra directa a WhatsApp para atención inmediata.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <button onclick="showSection('services')" class="px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-bold rounded-xl shadow-lg shadow-amber-500/30 transition transform hover:-translate-y-0.5 flex items-center gap-3">
+                            <i class="fa-solid fa-bolt text-lg"></i> Ver Servicios y Precios
+                        </button>
+                        <a href="https://wa.me/584120000000?text=Hola,%20vengo%20de%20la%20web%20de%20Rucoy%20Share%20Elite%20y%20quiero%20consultar%20disponibilidad." target="_blank" class="px-8 py-4 bg-rucoy-whatsapp hover:bg-rucoy-whatsappHover text-black font-extrabold rounded-xl shadow-lg shadow-emerald-500/20 transition flex items-center gap-3">
+                            <i class="fa-brands fa-whatsapp text-xl"></i> Chat Directo WhatsApp
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+                <div class="bg-rucoy-card border border-gray-800 p-6 rounded-2xl hover:border-amber-500/40 transition group">
+                    <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-shield-dog"></i>
+                    </div>
+                    <h3 class="font-cinzel text-xl font-bold mb-2 text-white">Share 100% Seguro</h3>
+                    <p class="text-gray-400 text-sm">Cuidado experto de tu cuenta con horarios garantizados, cero muertes injustas y protección total.</p>
+                </div>
+                <div class="bg-rucoy-card border border-gray-800 p-6 rounded-2xl hover:border-emerald-500/40 transition group">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition">
+                        <i class="fa-brands fa-whatsapp"></i>
+                    </div>
+                    <h3 class="font-cinzel text-xl font-bold mb-2 text-white">Checkout a WhatsApp</h3>
+                    <p class="text-gray-400 text-sm">Al comprar cualquier servicio, tu pedido se genera automáticamente y te redirige a WhatsApp con todos los datos listos.</p>
+                </div>
+                <div class="bg-rucoy-card border border-gray-800 p-6 rounded-2xl hover:border-blue-500/40 transition group">
+                    <div class="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                    </div>
+                    <h3 class="font-cinzel text-xl font-bold mb-2 text-white">Base de Datos en Nube Local</h3>
+                    <p class="text-gray-400 text-sm">Tus registros de usuario, contraseñas y órdenes de compra quedan guardados de manera persistente en tu navegador.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: SERVICES & PRICING -->
+        <section id="section-services" class="py-12 px-4 max-w-7xl mx-auto hidden">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span class="text-amber-500 text-xs uppercase tracking-widest font-bold">Catálogo Épico</span>
+                <h2 class="font-cinzel text-3xl sm:text-5xl font-black mt-2 mb-4">SERVICIOS DE RUCOY ONLINE</h2>
+                <p class="text-gray-400">Elige el plan que necesites. Al hacer clic en comprar, se registrará en tu historial de la nube y se enviará la orden directo a nuestro WhatsApp.</p>
+            </div>
+
+            <!-- Pricing Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="bg-rucoy-card rounded-3xl border border-gray-800 p-8 flex flex-col justify-between hover:border-amber-500/50 transition relative group">
+                    <div class="absolute -top-3 left-8 bg-gray-800 text-gray-300 text-xs font-bold px-3 py-1 rounded-full border border-gray-700">Share Diario</div>
+                    <div>
+                        <div class="text-amber-400 text-2xl font-black mb-2 font-cinzel">Pack Share 4 Horas</div>
+                        <p class="text-gray-400 text-sm mb-6">Ideal para mantener nivel y stats entrenando en zonas óptimas.</p>
+                        <div class="flex items-baseline mb-6">
+                            <span class="text-4xl font-black text-white">$5 USD</span>
+                            <span class="text-gray-400 text-sm ml-2">o 5M Oro</span>
+                        </div>
+                        <ul class="space-y-3 text-sm text-gray-300 mb-8">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> 4 Horas de share diario</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Farmeo en zona media</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Registro automático en nube</li>
+                        </ul>
+                    </div>
+                    <button onclick="openPurchaseModal('Pack Share 4 Horas', 5, '5M Oro')" class="w-full py-3.5 bg-rucoy-whatsapp hover:bg-rucoy-whatsappHover text-black font-extrabold rounded-xl shadow-lg shadow-emerald-500/20 transition flex items-center justify-center gap-2">
+                        <i class="fa-brands fa-whatsapp text-lg"></i> Comprar por WhatsApp
+                    </button>
+                </div>
+
+                <!-- Card 2 (Featured) -->
+                <div class="bg-gradient-to-b from-rucoy-card to-gray-900 rounded-3xl border-2 border-amber-500 p-8 flex flex-col justify-between shadow-2xl relative">
+                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-amber-500 text-black text-xs font-black px-4 py-1 rounded-full uppercase tracking-wider">Más Solicitado</div>
+                    <div>
+                        <div class="text-amber-400 text-2xl font-black mb-2 font-cinzel">Pack Share Pro Elite</div>
+                        <p class="text-gray-400 text-sm mb-6">Para jugadores exigentes que buscan el máximo rendimiento y zonas VIP.</p>
+                        <div class="flex items-baseline mb-6">
+                            <span class="text-4xl font-black text-white">$12 USD</span>
+                            <span class="text-gray-400 text-sm ml-2">o 12M Oro</span>
+                        </div>
+                        <ul class="space-y-3 text-sm text-gray-300 mb-8">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> 8 Horas de share diario</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> Farmeo en zonas altas (Dragones/Golems)</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> Reporte diario de stats</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> Atención VIP prioritaria</li>
+                        </ul>
+                    </div>
+                    <button onclick="openPurchaseModal('Pack Share Pro Elite', 12, '12M Oro')" class="w-full py-3.5 bg-rucoy-whatsapp hover:bg-rucoy-whatsappHover text-black font-extrabold rounded-xl shadow-lg shadow-emerald-500/30 transition flex items-center justify-center gap-2">
+                        <i class="fa-brands fa-whatsapp text-lg"></i> Comprar por WhatsApp
+                    </button>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-rucoy-card rounded-3xl border border-gray-800 p-8 flex flex-col justify-between hover:border-amber-500/50 transition relative group">
+                    <div class="absolute -top-3 left-8 bg-gray-800 text-gray-300 text-xs font-bold px-3 py-1 rounded-full border border-gray-700">Farmeo Oro</div>
+                    <div>
+                        <div class="text-amber-400 text-2xl font-black mb-2 font-cinzel">Farmeo 10M Oro</div>
+                        <p class="text-gray-400 text-sm mb-6">Obtén 10 Millones de oro limpio farmeado por profesionales en Rucoy.</p>
+                        <div class="flex items-baseline mb-6">
+                            <span class="text-4xl font-black text-white">$10 USD</span>
+                            <span class="text-gray-400 text-sm ml-2">Entrega Rápida</span>
+                        </div>
+                        <ul class="space-y-3 text-sm text-gray-300 mb-8">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> 10M de Oro garantizado</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Entrega segura in-game</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Registro en historial</li>
+                        </ul>
+                    </div>
+                    <button onclick="openPurchaseModal('Farmeo 10M Oro', 10, '10M Oro')" class="w-full py-3.5 bg-rucoy-whatsapp hover:bg-rucoy-whatsappHover text-black font-extrabold rounded-xl shadow-lg shadow-emerald-500/20 transition flex items-center justify-center gap-2">
+                        <i class="fa-brands fa-whatsapp text-lg"></i> Comprar por WhatsApp
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: USER DASHBOARD -->
+        <section id="section-dashboard" class="py-12 px-4 max-w-7xl mx-auto hidden">
+            <div class="bg-rucoy-card border border-gray-800 rounded-3xl p-6 sm:p-8 mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                <div class="flex items-center gap-4">
+                    <div class="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 text-3xl font-cinzel font-bold">
+                        <span id="dash-avatar-initial">U</span>
+                    </div>
+                    <div>
+                        <span class="text-xs uppercase tracking-widest text-amber-500 font-bold">Panel de Control Personal</span>
+                        <h2 id="dash-username" class="font-cinzel text-2xl sm:text-3xl font-black text-white">Nombre</h2>
+                        <p class="text-xs text-gray-400 mt-1">ID Nube: <span id="dash-userid" class="font-mono text-gray-300">---</span> | Correo: <span id="dash-useremail" class="text-gray-300">---</span></p>
+                    </div>
+                </div>
+                <div>
+                    <button onclick="openAddServiceModal()" class="px-5 py-3 bg-amber-500 hover:bg-amber-400 text-black font-bold rounded-xl text-sm transition flex items-center gap-2 shadow-lg shadow-amber-500/20">
+                        <i class="fa-solid fa-plus"></i> Registrar Servicio Manual
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+                <div class="bg-rucoy-card border border-gray-800 p-6 rounded-2xl">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-gray-400 text-sm font-medium">Órdenes / Servicios Totales</span>
+                        <div class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center"><i class="fa-solid fa-bag-shopping"></i></div>
+                    </div>
+                    <div id="stat-total-orders" class="text-3xl font-black font-cinzel text-white">0</div>
+                </div>
+                <div class="bg-rucoy-card border border-gray-800 p-6 rounded-2xl">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-gray-400 text-sm font-medium">Inversión Registrada</span>
+                        <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center"><i class="fa-solid fa-coins"></i></div>
+                    </div>
+                    <div id="stat-total-spent" class="text-3xl font-black font-cinzel text-amber-400">$0 USD</div>
+                </div>
+                <div class="bg-rucoy-card border border-gray-800 p-6 rounded-2xl">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-gray-400 text-sm font-medium">Estado del Servicio</span>
+                        <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center"><i class="fa-solid fa-shield-check"></i></div>
+                    </div>
+                    <div id="stat-status" class="text-2xl font-black font-cinzel text-emerald-400">ACTIVO</div>
+                </div>
+            </div>
+
+            <!-- History Table -->
+            <div class="bg-rucoy-card border border-gray-800 rounded-3xl overflow-hidden shadow-xl">
+                <div class="p-6 border-b border-gray-800 flex items-center justify-between">
+                    <div>
+                        <h3 class="font-cinzel text-xl font-bold text-white">Mis Órdenes y Compras en la Nube</h3>
+                        <p class="text-xs text-gray-400">Historial sincronizado con WhatsApp y almacenamiento local</p>
+                    </div>
+                    <button onclick="clearUserHistory()" class="text-xs text-red-400 hover:text-red-300 px-3 py-1.5 bg-red-950/30 border border-red-900/40 rounded-lg transition">
+                        <i class="fa-solid fa-trash mr-1"></i> Limpiar Historial
+                    </button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-900/50 text-gray-400 text-xs uppercase tracking-wider border-b border-gray-800">
+                                <th class="p-4">Servicio / Paquete</th>
+                                <th class="p-4">Costo / Método</th>
+                                <th class="p-4">Fecha</th>
+                                <th class="p-4">Estado</th>
+                                <th class="p-4 text-right">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-history-table" class="divide-y divide-gray-800/60 text-sm">
+                            <!-- Injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="user-empty-history" class="hidden py-12 text-center">
+                    <i class="fa-solid fa-folder-open text-4xl text-gray-600 mb-3"></i>
+                    <p class="text-gray-400 text-sm">No tienes órdenes registradas todavía.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: ADMIN PANEL -->
+        <section id="section-admin" class="py-12 px-4 max-w-7xl mx-auto hidden">
+            <div class="bg-rucoy-card border border-red-500/30 rounded-3xl p-6 sm:p-8 mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                <div>
+                    <span class="text-xs uppercase tracking-widest text-red-400 font-bold">Panel de Administración Global</span>
+                    <h2 class="font-cinzel text-2xl sm:text-3xl font-black text-white">Gestión de Nube (Usuarios y Órdenes)</h2>
+                    <p class="text-xs text-gray-400 mt-1">Control total de cuentas registradas y compras realizadas en la plataforma</p>
+                </div>
+                <button onclick="loadAdminPanel()" class="px-4 py-2.5 bg-gray-800 hover:bg-gray-700 text-amber-400 font-bold rounded-xl text-sm transition">
+                    <i class="fa-solid fa-rotate-right mr-1"></i> Actualizar Datos
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Registered Users List -->
+                <div class="bg-rucoy-card border border-gray-800 rounded-3xl p-6">
+                    <h3 class="font-cinzel text-xl font-bold mb-4 text-white flex items-center gap-2">
+                        <i class="fa-solid fa-users text-amber-400"></i> Usuarios Registrados (<span id="admin-user-count">0</span>)
+                    </h3>
+                    <div class="overflow-x-auto max-h-96">
+                        <table class="w-full text-left text-sm">
+                            <thead>
+                                <tr class="text-gray-400 text-xs uppercase border-b border-gray-800">
+                                    <th class="p-3">Nombre / UID</th>
+                                    <th class="p-3">Correo</th>
+                                    <th class="p-3">Contraseña</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-users-table" class="divide-y divide-gray-800/60">
+                                <!-- Injected -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- All System Purchases -->
+                <div class="bg-rucoy-card border border-gray-800 rounded-3xl p-6">
+                    <h3 class="font-cinzel text-xl font-bold mb-4 text-white flex items-center gap-2">
+                        <i class="fa-solid fa-receipt text-emerald-400"></i> Todas las Órdenes (<span id="admin-order-count">0</span>)
+                    </h3>
+                    <div class="overflow-x-auto max-h-96">
+                        <table class="w-full text-left text-sm">
+                            <thead>
+                                <tr class="text-gray-400 text-xs uppercase border-b border-gray-800">
+                                    <th class="p-3">Usuario / Nick</th>
+                                    <th class="p-3">Servicio</th>
+                                    <th class="p-3">Precio</th>
+                                    <th class="p-3">Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-orders-table" class="divide-y divide-gray-800/60">
+                                <!-- Injected -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-rucoy-dark border-t border-gray-800 mt-auto py-8 px-4 text-center text-gray-500 text-xs">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center space-x-2">
+                <i class="fa-solid fa-shield-halved text-amber-500"></i>
+                <span class="font-cinzel font-bold text-gray-300">Rucoy Share Elite</span>
+            </div>
+            <p>&copy; 2026 Rucoy Share Portal. Todos los derechos reservados.</p>
+            <div class="flex space-x-4 text-gray-400 text-base">
+                <a href="https://wa.me/584120000000" target="_blank" class="hover:text-emerald-400 transition"><i class="fa-brands fa-whatsapp"></i></a>
+                <a href="#" class="hover:text-amber-400 transition"><i class="fa-brands fa-discord"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL: LOGIN / REGISTER -->
+    <div id="auth-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-rucoy-card border border-gray-800 w-full max-w-md rounded-3xl p-8 relative shadow-2xl glow-box">
+            <button onclick="closeModal('auth')" class="absolute top-6 right-6 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-400 border border-amber-500/30 flex items-center justify-center mx-auto mb-3 text-xl">
+                    <i id="auth-modal-icon" class="fa-solid fa-user-lock"></i>
+                </div>
+                <h3 id="auth-modal-title" class="font-cinzel text-2xl font-black text-white">Iniciar Sesión</h3>
+                <p id="auth-modal-subtitle" class="text-xs text-gray-400 mt-1">Accede a tu panel y guarda tus registros</p>
+            </div>
+
+            <form id="auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-4">
+                <div id="register-name-group" class="hidden">
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Nombre / Personaje Rucoy</label>
+                    <input type="text" id="auth-name" placeholder="Ej. ShareMaster99" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Correo Electrónico</label>
+                    <input type="email" id="auth-email" required placeholder="correo@ejemplo.com" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Contraseña</label>
+                    <input type="password" id="auth-password" required placeholder="••••••••" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500 text-sm">
+                </div>
+                <button type="submit" id="auth-submit-btn" class="w-full py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-bold rounded-xl shadow-lg transition text-sm uppercase tracking-wider mt-2">
+                    Ingresar
+                </button>
+            </form>
+
+            <div class="mt-6 text-center text-xs text-gray-400">
+                <span id="auth-switch-text">¿No tienes cuenta?</span>
+                <button onclick="switchAuthMode()" id="auth-switch-btn" class="text-amber-400 font-bold ml-1 hover:underline">Regístrate aquí</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: PURCHASE & WHATSAPP CHECKOUT -->
+    <div id="purchase-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-rucoy-card border border-gray-800 w-full max-w-md rounded-3xl p-8 relative shadow-2xl">
+            <button onclick="closeModal('purchase')" class="absolute top-6 right-6 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 flex items-center justify-center mx-auto mb-3 text-xl">
+                    <i class="fa-brands fa-whatsapp"></i>
+                </div>
+                <h3 class="font-cinzel text-2xl font-black text-white">Completar Compra por WhatsApp</h3>
+                <p class="text-xs text-gray-400 mt-1">El pedido se guardará en tu historial y abrirá WhatsApp de inmediato</p>
+            </div>
+
+            <div class="bg-gray-900/60 border border-gray-800 rounded-2xl p-4 mb-6 space-y-2 text-sm">
+                <div class="flex justify-between">
+                    <span class="text-gray-400">Servicio:</span>
+                    <span id="modal-pkg-name" class="font-bold text-white">---</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-400">Precio USD:</span>
+                    <span id="modal-pkg-price" class="font-bold text-amber-400">---</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-400">Equivalente Oro:</span>
+                    <span id="modal-pkg-gold" class="font-bold text-yellow-400">---</span>
+                </div>
+            </div>
+
+            <div class="space-y-4 mb-6">
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Tu Nick en Rucoy Online</label>
+                    <input type="text" id="modal-char-nick" placeholder="Ej. Knight Pro" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Método de Pago</label>
+                    <select id="modal-payment-method" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500 text-sm">
+                        <option value="Oro Rucoy (In-Game)">Oro Rucoy (In-Game)</option>
+                        <option value="Binance Pay (USDT)">Binance Pay (USDT)</option>
+                        <option value="PayPal">PayPal</option>
+                        <option value="Transferencia Bancaria">Transferencia Bancaria</option>
+                    </select>
+                </div>
+            </div>
+
+            <button onclick="confirmAndSendWhatsApp()" class="w-full py-4 bg-rucoy-whatsapp hover:bg-rucoy-whatsappHover text-black font-extrabold rounded-xl shadow-lg shadow-emerald-500/30 transition flex items-center justify-center gap-3 text-sm uppercase tracking-wider">
+                <i class="fa-brands fa-whatsapp text-lg"></i> Enviar Pedido a WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL: ADD MANUAL SERVICE -->
+    <div id="service-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-rucoy-card border border-gray-800 w-full max-w-md rounded-3xl p-8 relative shadow-2xl">
+            <button onclick="closeModal('service')" class="absolute top-6 right-6 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 rounded-2xl bg-blue-500/10 text-blue-400 border border-blue-500/30 flex items-center justify-center mx-auto mb-3 text-xl">
+                    <i class="fa-solid fa-file-circle-plus"></i>
+                </div>
+                <h3 class="font-cinzel text-2xl font-black text-white">Registrar Orden Manual</h3>
+                <p class="text-xs text-gray-400 mt-1">Añade un registro personalizado a tu historial</p>
+            </div>
+
+            <form onsubmit="handleManualService(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Nombre del Servicio</label>
+                    <input type="text" id="manual-service-name" required placeholder="Ej. Alquiler de Cuenta 2 Horas" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Precio ($ USD)</label>
+                    <input type="number" id="manual-service-price" required step="0.5" min="0" placeholder="5.0" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500 text-sm">
+                </div>
+                <button type="submit" class="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition text-sm uppercase tracking-wider">
+                    Guardar en Nube
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 px-5 py-4 rounded-2xl bg-rucoy-card border border-amber-500/40 shadow-2xl text-white">
+        <div id="toast-icon" class="text-amber-400 text-xl"><i class="fa-solid fa-circle-check"></i></div>
+        <div>
+            <h5 id="toast-title" class="font-bold text-sm">Notificación</h5>
+            <p id="toast-desc" class="text-xs text-gray-400">Mensaje</p>
+        </div>
+    </div>
+
+    <!-- Script Application Logic -->
+    <script>
+        // Admin Master Credentials
+        const ADMIN_EMAIL = "admin@rucoy.com";
+        const ADMIN_PHONE = "584120000000"; // Replace with your WhatsApp number
+
+        let currentUser = JSON.parse(localStorage.getItem('rucoy_current_user')) || null;
+        let isRegisterMode = false;
+        let selectedPackage = null;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            updateAuthUI();
+            if (currentUser) {
+                loadUserDashboard();
+            }
+        });
+
+        function showSection(sectionId) {
+            const sections = ['home', 'services', 'dashboard', 'admin'];
+            sections.forEach(s => {
+                const el = document.getElementById(`section-${s}`);
+                if (el) {
+                    if (s === sectionId) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                }
+            });
+
+            if (sectionId === 'dashboard' && !currentUser) {
+                openModal('login');
+                showSection('home');
+                return;
+            }
+
+            if (sectionId === 'admin') {
+                if (!currentUser || currentUser.email !== ADMIN_EMAIL) {
+                    showToast('Acceso Denegado', 'Solo el administrador puede entrar a esta sección.', 'error');
+                    showSection('home');
+                    return;
+                }
+                loadAdminPanel();
+            }
+
+            if (sectionId === 'dashboard') {
+                loadUserDashboard();
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        // Auth Management
+        function openModal(mode) {
+            document.getElementById('auth-modal').classList.remove('hidden');
+            if (mode === 'register') {
+                isRegisterMode = true;
+                document.getElementById('auth-modal-title').innerText = "Crear Cuenta Nube";
+                document.getElementById('auth-modal-subtitle').innerText = "Regístrate para guardar tu contraseña y compras";
+                document.getElementById('auth-modal-icon').className = "fa-solid fa-user-plus";
+                document.getElementById('register-name-group').classList.remove('hidden');
+                document.getElementById('auth-submit-btn').innerText = "Registrarse";
+                document.getElementById('auth-switch-text').innerText = "¿Ya tienes cuenta?";
+                document.getElementById('auth-switch-btn').innerText = "Inicia sesión";
+            } else {
+                isRegisterMode = false;
+                document.getElementById('auth-modal-title').innerText = "Iniciar Sesión";
+                document.getElementById('auth-modal-subtitle').innerText = "Accede a tu panel y registros de share";
+                document.getElementById('auth-modal-icon').className = "fa-solid fa-user-lock";
+                document.getElementById('register-name-group').classList.add('hidden');
+                document.getElementById('auth-submit-btn').innerText = "Ingresar";
+                document.getElementById('auth-switch-text').innerText = "¿No tienes cuenta?";
+                document.getElementById('auth-switch-btn').innerText = "Regístrate aquí";
+            }
+        }
+
+        function switchAuthMode() {
+            openModal(isRegisterMode ? 'login' : 'register');
+        }
+
+        function closeModal(type) {
+            if (type === 'auth') document.getElementById('auth-modal').classList.add('hidden');
+            if (type === 'purchase') document.getElementById('purchase-modal').classList.add('hidden');
+            if (type === 'service') document.getElementById('service-modal').classList.add('hidden');
+        }
+
+        function handleAuthSubmit(e) {
+            e.preventDefault();
+            const email = document.getElementById('auth-email').value.trim();
+            const password = document.getElementById('auth-password').value.trim();
+            const nameInput = document.getElementById('auth-name').value.trim();
+
+            let usersDb = JSON.parse(localStorage.getItem('rucoy_users_db')) || [];
+
+            if (isRegisterMode) {
+                const existing = usersDb.find(u => u.email === email);
+                if (existing) {
+                    showToast('Error', 'Este correo ya está registrado en la nube.', 'error');
+                    return;
+                }
+
+                const newUser = {
+                    id: 'UID-' + Math.floor(100000 + Math.random() * 900000),
+                    name: nameInput || email.split('@')[0],
+                    email: email,
+                    password: password,
+                    purchases: []
+                };
+
+                usersDb.push(newUser);
+                localStorage.setItem('rucoy_users_db', JSON.stringify(usersDb));
+                currentUser = newUser;
+                localStorage.setItem('rucoy_current_user', JSON.stringify(currentUser));
+
+                closeModal('auth');
+                updateAuthUI();
+                showToast('¡Éxito!', 'Cuenta guardada en la nube local.', 'success');
+                showSection('dashboard');
+            } else {
+                // Check if admin login
+                if (email === ADMIN_EMAIL && password === "admin123") {
+                    currentUser = {
+                        id: 'ADMIN-01',
+                        name: 'Administrador Elite',
+                        email: ADMIN_EMAIL,
+                        password: 'admin123',
+                        purchases: []
+                    };
+                } else {
+                    const user = usersDb.find(u => u.email === email && u.password === password);
+                    if (!user) {
+                        showToast('Error', 'Correo o contraseña incorrectos.', 'error');
+                        return;
+                    }
+                    currentUser = user;
+                }
+
+                localStorage.setItem('rucoy_current_user', JSON.stringify(currentUser));
+                closeModal('auth');
+                updateAuthUI();
+                showToast('¡Bienvenido!', `Sesión iniciada como ${currentUser.name}`, 'success');
+                showSection('dashboard');
+            }
+            document.getElementById('auth-form').reset();
+        }
+
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('rucoy_current_user');
+            updateAuthUI();
+            showSection('home');
+            showToast('Sesión Cerrada', 'Has salido de tu cuenta.', 'info');
+        }
+
+        function updateAuthUI() {
+            const guestControls = document.getElementById('auth-guest-controls');
+            const userControls = document.getElementById('auth-user-controls');
+            const navDashboard = document.getElementById('nav-dashboard');
+            const mobileDashboard = document.getElementById('mobile-nav-dashboard');
+            const navAdmin = document.getElementById('nav-admin');
+            const mobileAdmin = document.getElementById('mobile-nav-admin');
+
+            if (currentUser) {
+                guestControls.classList.add('hidden');
+                userControls.classList.remove('hidden');
+                navDashboard.classList.remove('hidden');
+                mobileDashboard.classList.remove('hidden');
+                document.getElementById('user-display-name').innerText = currentUser.name;
+
+                if (currentUser.email === ADMIN_EMAIL) {
+                    navAdmin.classList.remove('hidden');
+                    mobileAdmin.classList.remove('hidden');
+                } else {
+                    navAdmin.classList.add('hidden');
+                    mobileAdmin.classList.add('hidden');
+                }
+            } else {
+                guestControls.classList.remove('hidden');
+                userControls.classList.add('hidden');
+                navDashboard.classList.add('hidden');
+                mobileDashboard.classList.add('hidden');
+                navAdmin.classList.add('hidden');
+                mobileAdmin.classList.add('hidden');
+            }
+        }
+
+        // Purchase & WhatsApp Integration
+        function openPurchaseModal(name, priceUsd, gold) {
+            if (!currentUser) {
+                openModal('login');
+                showToast('Atención', 'Inicia sesión para realizar una compra.', 'error');
+                return;
+            }
+
+            selectedPackage = { name, priceUsd, gold };
+            document.getElementById('modal-pkg-name').innerText = name;
+            document.getElementById('modal-pkg-price').innerText = `$${priceUsd} USD`;
+            document.getElementById('modal-pkg-gold').innerText = gold;
+            document.getElementById('modal-char-nick').value = currentUser.name || '';
+            document.getElementById('purchase-modal').classList.remove('hidden');
+        }
+
+        function confirmAndSendWhatsApp() {
+            const nick = document.getElementById('modal-char-nick').value.trim() || currentUser.name;
+            const method = document.getElementById('modal-payment-method').value;
+
+            const order = {
+                id: 'ORD-' + Math.floor(1000 + Math.random() * 9000),
+                service: selectedPackage.name,
+                price: selectedPackage.priceUsd,
+                method: method,
+                character: nick,
+                date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                status: 'Pendiente de Pago / Verificación'
+            };
+
+            // Save to current user purchases
+            currentUser.purchases.unshift(order);
+
+            // Update main users DB in localStorage
+            let usersDb = JSON.parse(localStorage.getItem('rucoy_users_db')) || [];
+            usersDb = usersDb.map(u => u.email === currentUser.email ? currentUser : u);
+            localStorage.setItem('rucoy_users_db', JSON.stringify(usersDb));
+            localStorage.setItem('rucoy_current_user', JSON.stringify(currentUser));
+
+            closeModal('purchase');
+
+            // Build WhatsApp Message URL
+            const message = `¡Hola! 👋 Vengo de la web Rucoy Share Elite y quiero confirmar el siguiente servicio:%0A%0A` +
+                            `📌 *Servicio:* ${order.service}%0A` +
+                            `💰 *Precio:* $${order.price} USD%0A` +
+                            `💳 *Método de Pago:* ${order.method}%0A` +
+                            `⚔️ *Nick en Rucoy:* ${order.character}%0A` +
+                            `👤 *Usuario Nube:* ${currentUser.email}%0A` +
+                            `🆔 *ID Orden:* ${order.id}%0A%0A` +
+                            `Quedo atento para coordinar la entrega o el share. ¡Gracias!`;
+
+            const whatsappUrl = `https://wa.me/${ADMIN_PHONE}?text=${message}`;
+
+            showToast('¡Orden Registrada!', 'Redirigiendo a WhatsApp...', 'success');
+            setTimeout(() => {
+                window.open(whatsappUrl, '_blank');
+                showSection('dashboard');
+            }, 1000);
+        }
+
+        function openAddServiceModal() {
+            if (!currentUser) return;
+            document.getElementById('service-modal').classList.remove('hidden');
+        }
+
+        function handleManualService(e) {
+            e.preventDefault();
+            const name = document.getElementById('manual-service-name').value.trim();
+            const price = parseFloat(document.getElementById('manual-service-price').value) || 0;
+
+            const order = {
+                id: 'MAN-' + Math.floor(1000 + Math.random() * 9000),
+                service: name,
+                price: price,
+                method: 'Registro Manual Nube',
+                character: currentUser.name,
+                date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                status: 'Registrado'
+            };
+
+            currentUser.purchases.unshift(order);
+            let usersDb = JSON.parse(localStorage.getItem('rucoy_users_db')) || [];
+            usersDb = usersDb.map(u => u.email === currentUser.email ? currentUser : u);
+            localStorage.setItem('rucoy_users_db', JSON.stringify(usersDb));
+            localStorage.setItem('rucoy_current_user', JSON.stringify(currentUser));
+
+            closeModal('service');
+            document.querySelector('#service-modal form').reset();
+            showToast('Guardado', 'Orden añadida al panel.', 'success');
+            loadUserDashboard();
+        }
+
+        function loadUserDashboard() {
+            if (!currentUser) return;
+
+            document.getElementById('dash-username').innerText = currentUser.name;
+            document.getElementById('dash-useremail').innerText = currentUser.email;
+            document.getElementById('dash-userid').innerText = currentUser.id;
+            document.getElementById('dash-avatar-initial').innerText = currentUser.name.charAt(0).toUpperCase();
+
+            const purchases = currentUser.purchases || [];
+            document.getElementById('stat-total-orders').innerText = purchases.length;
+            const totalSpent = purchases.reduce((acc, curr) => acc + (parseFloat(curr.price) || 0), 0);
+            document.getElementById('stat-total-spent').innerText = `$${totalSpent.toFixed(2)} USD`;
+
+            const tbody = document.getElementById('user-history-table');
+            const emptyMsg = document.getElementById('user-empty-history');
+            tbody.innerHTML = '';
+
+            if (purchases.length === 0) {
+                emptyMsg.classList.remove('hidden');
+            } else {
+                emptyMsg.classList.add('hidden');
+                purchases.forEach((item, index) => {
+                    const tr = document.createElement('tr');
+                    tr.className = "hover:bg-gray-800/40 transition";
+                    tr.innerHTML = `
+                        <td class="p-4">
+                            <div class="font-bold text-white">${item.service}</div>
+                            <div class="text-xs text-gray-400"><i class="fa-solid fa-gamepad text-[10px] mr-1 text-amber-500"></i> ${item.character || currentUser.name}</div>
+                        </td>
+                        <td class="p-4">
+                            <div class="font-bold text-amber-400">$${item.price} USD</div>
+                            <div class="text-xs text-gray-400">${item.method}</div>
+                        </td>
+                        <td class="p-4 text-xs text-gray-300">${item.date}</td>
+                        <td class="p-4">
+                            <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">${item.status}</span>
+                        </td>
+                        <td class="p-4 text-right">
+                            <button onclick="deleteUserRecord(${index})" class="w-8 h-8 rounded-lg bg-red-950/40 hover:bg-red-900/60 text-red-400 transition inline-flex items-center justify-center">
+                                <i class="fa-solid fa-trash text-xs"></i>
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+        }
+
+        function deleteUserRecord(index) {
+            if (!currentUser) return;
+            currentUser.purchases.splice(index, 1);
+            let usersDb = JSON.parse(localStorage.getItem('rucoy_users_db')) || [];
+            usersDb = usersDb.map(u => u.email === currentUser.email ? currentUser : u);
+            localStorage.setItem('rucoy_users_db', JSON.stringify(usersDb));
+            localStorage.setItem('rucoy_current_user', JSON.stringify(currentUser));
+            loadUserDashboard();
+            showToast('Eliminado', 'Orden borrada del historial.', 'info');
+        }
+
+        function clearUserHistory() {
+            if (!currentUser) return;
+            if (confirm('¿Deseas vaciar todo tu historial de órdenes?')) {
+                currentUser.purchases = [];
+                let usersDb = JSON.parse(localStorage.getItem('rucoy_users_db')) || [];
+                usersDb = usersDb.map(u => u.email === currentUser.email ? currentUser : u);
+                localStorage.setItem('rucoy_users_db', JSON.stringify(usersDb));
+                localStorage.setItem('rucoy_current_user', JSON.stringify(currentUser));
+                loadUserDashboard();
+                showToast('Historial Vacío', 'Se borraron todas las órdenes.', 'info');
+            }
+        }
+
+        // Admin Panel Loader
+        function loadAdminPanel() {
+            const usersDb = JSON.parse(localStorage.getItem('rucoy_users_db')) || [];
+            document.getElementById('admin-user-count').innerText = usersDb.length;
+
+            const usersTbody = document.getElementById('admin-users-table');
+            usersTbody.innerHTML = '';
+            usersDb.forEach(u => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-3 font-bold text-white">${u.name} <span class="block text-[10px] text-gray-500">${u.id}</span></td>
+                    <td class="p-3 text-gray-300 text-xs">${u.email}</td>
+                    <td class="p-3 font-mono text-amber-400 text-xs">${u.password}</td>
+                `;
+                usersTbody.appendChild(tr);
+            });
+
+            // Gather all orders from all users
+            let allOrders = [];
+            usersDb.forEach(u => {
+                if (u.purchases) {
+                    u.purchases.forEach(p => {
+                        allOrders.push({ ...p, owner: u.name });
+                    });
+                }
+            });
+
+            document.getElementById('admin-order-count').innerText = allOrders.length;
+            const ordersTbody = document.getElementById('admin-orders-table');
+            ordersTbody.innerHTML = '';
+
+            allOrders.forEach(ord => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-3 font-bold text-white">${ord.owner} <span class="block text-[10px] text-gray-400">Nick: ${ord.character}</span></td>
+                    <td class="p-3 text-gray-200 text-xs">${ord.service}</td>
+                    <td class="p-3 text-amber-400 font-bold">$${ord.price}</td>
+                    <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/20">${ord.status}</span></td>
+                `;
+                ordersTbody.appendChild(tr);
+            });
+        }
+
+        // Toast Helper
+        function showToast(title, desc, type = 'success') {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-title').innerText = title;
+            document.getElementById('toast-desc').innerText = desc;
+            const icon = document.getElementById('toast-icon');
+            icon.innerHTML = type === 'success' ? '<i class="fa-solid fa-circle-check text-emerald-400"></i>' : '<i class="fa-solid fa-triangle-exclamation text-red-400"></i>';
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3500);
+        }
+    </script>
+</body>
+</html>
